@@ -9,8 +9,8 @@ int valorAux, valorLinha, valorColuna;
 void defineValoresAuxiliares(){
     fscanf(arquivo_entrada, "%d", &tamanhoMatriz); //Recebe o primeiro valor da primeira linha
     NUMERO_DE_COLUNAS = NUMERO_DE_LINHAS = tamanhoMatriz;
-    vetorAux = malloc(tamanhoMatriz * sizeof(int));
-    //Preencher matriz auxiliar com os valores restantes da primeira linha
+    vetorAux = malloc(tamanhoMatriz * sizeof(int)); //O vetor auxiliar contem os valores após o primeiro valor da primeira linha
+    //Preencher vetor auxiliar com os valores restantes da primeira linha
     for(int i = 0; i < tamanhoMatriz; i++){
         fscanf(arquivo_entrada, "%d", &vetorAux[i]);
     }
@@ -26,27 +26,21 @@ void alocaMatrizPrincipal(){
 
 //Preencher matriz principal com base nos pares ordenados do arquivo de entrada
 void preencheMatrizPrincipal(){
- /*    int *aux = (int *) malloc (sizeof(int) * NUMERO_DE_LINHAS * 2);
-    int count = 0;
     while(!feof(arquivo_entrada)){
-        fscanf(arquivo_entrada, "%d", &valorAux);
-        aux[count] = valorAux; 
-        count++;
-    }
-    for(int i = 0; i < NUMERO_DE_LINHAS * 2; i++){
-        if(i % 2 != 0){
-
-        }
-    } */
-    while(!feof(arquivo_entrada)){
+        //Ler o par ordenado de cada linha e armazenar
         fscanf(arquivo_entrada, "%d", &valorLinha);
         fscanf(arquivo_entrada, "%d", &valorColuna);
-
-   /*      for(int i = 0; i < tamanhoMatriz; tamanhoMatriz++){
-            if(valorLinha == tamanhoMatriz[i]){
-
+        int linhaAux, colunaAux;
+        //Percorre vetor auxiliar e compara a posição dos valores dos pares
+        for(int i = 0; i < tamanhoMatriz; i++){
+            if(valorLinha == vetorAux[i]){
+                linhaAux = i;
             }
-        } */
+            if(valorColuna == vetorAux[i]){
+                colunaAux = i;
+            }
+        }
+        matrizPrincipal[linhaAux][colunaAux] = 1;
     }
 }
 
@@ -60,6 +54,15 @@ void imprimeMatrizPrincipal(){
     }
 }
 
+//Preenche matriz principal preenchendo com 0, para evitar erros
+void iniciaMatrizPrincipal(){
+     for(int i = 0; i < NUMERO_DE_LINHAS; i++){
+        for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
+            matrizPrincipal[i][j] = 0;
+        }
+    }
+}
+
 //Imprimir vetor auxiliar para teste
 void imprimeVetorAux(){
     for(int i = 0; i < tamanhoMatriz; i++){
@@ -68,9 +71,10 @@ void imprimeVetorAux(){
 }
 
 int main(){
-    arquivo_entrada = fopen("ex6.txt", "rt"); //Leitura do arquivo
+    arquivo_entrada = fopen("ex1.txt", "rt"); //Leitura do arquivo
     defineValoresAuxiliares();
     alocaMatrizPrincipal();
+    iniciaMatrizPrincipal();
     preencheMatrizPrincipal();
-    imprimeVetorAux();
+    imprimeMatrizPrincipal();
 }
