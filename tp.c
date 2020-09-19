@@ -5,6 +5,8 @@ int tamanhoMatriz, *vetorAux, **matrizPrincipal, **matrizTransposta, NUMERO_DE_L
 FILE *arquivo_entrada;
 int valorAux, valorLinha, valorColuna;
 
+int matrizReflexiva = 0, matrizSimetrica = 0, matrizTransitiva = 0, matrizAntissimetrica = 0, matrizIrreflexiva = 0;
+
 //Analisar os valores da primeira linha.
 void defineValoresAuxiliares(){
     fscanf(arquivo_entrada, "%d", &tamanhoMatriz); //Recebe o primeiro valor da primeira linha
@@ -123,8 +125,10 @@ void verificaReflexiva(){
     //Para ser reflexiva, o contador ter sido somado em todas as posições da diagonal (que é o mesmo número de linhas ou colunas)
     if(count == NUMERO_DE_LINHAS){
         printf("1. Reflexiva: V\n");
+        matrizReflexiva = 1;
     } else {
         printf("1. Reflexiva: F\n");
+        matrizReflexiva = 0;
         //Caso não seja reflexiva, irei printar os pares que fazem com que essa condição não seja aceita.
         for(int i = 0; i < NUMERO_DE_LINHAS; i++){
             for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
@@ -157,9 +161,11 @@ void verificarIrreflexiva(){
     //Para ser irreflexiva, o contador NÃO pode ter sido somado em todas as posições da diagonal (que é o mesmo número de linhas ou colunas)
     if(count == NUMERO_DE_LINHAS){
         printf("2. Irreflexiva: V\n");
+        matrizIrreflexiva = 1;
     } else {
         //Caso não seja irreflexiva, irei printar os pares que fazem com que essa condição não seja aceita.
         printf("2. Irreflexiva: F\n");
+        matrizIrreflexiva = 0;
         for(int i = 0; i < NUMERO_DE_LINHAS; i++){
             for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
                 if(i == j){
@@ -188,8 +194,10 @@ void verificaSimetrica(){
     int ignora = 0;
     if(count == 1){
         printf("Simetrica: V\n");
+        matrizSimetrica = 1;
     } else {
         printf("Simetrica: F\n");
+        matrizSimetrica = 0;
         for(int i = 0; i < NUMERO_DE_LINHAS; i++){
             for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
                 if(matrizPrincipal[i][j] != matrizPrincipal[j][i]){
@@ -208,22 +216,24 @@ void verificaSimetrica(){
 }
 
 void verificaAntiSimetrica(){
-    int count = 1;
+    int count = 0;
 
     for(int i = 0; i < NUMERO_DE_LINHAS; i++){
         for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
             if(i != j){  
                 if(matrizPrincipal[i][j] == 1 && matrizPrincipal[j][i] == 1){
-                    count = 0;
+                    count = 1;
                 }
             }
         }
     }
 
-    if(count == 1){
+    if(count == 0){
         printf("Anti-simetrica: V\n");
+        matrizAntissimetrica = 1;
     } else {
         printf("Anti-simetrica: F\n");
+        matrizAntissimetrica = 0;
         for(int i = 0; i < NUMERO_DE_LINHAS; i++){
             for(int j = i; j < NUMERO_DE_COLUNAS; j++){
                 if(matrizPrincipal[i][j] == 1 && matrizPrincipal[j][i] == 1 && (i!=j)){
@@ -236,10 +246,71 @@ void verificaAntiSimetrica(){
     }
 }
 
+void verificaAssimetrica(){
+    if(matrizIrreflexiva == 1 && matrizAntissimetrica == 1){
+        printf("Assimetrica: V\n");
+    } else {
+        printf("Assimetrica: F\n");
+    }
+}
+
+void verificaTransitiva(){
+    int count = 0;
+    for(int i= 0; i < NUMERO_DE_LINHAS; i++){
+        for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
+            if((i != j) && matrizPrincipal[i][j] == 1){
+                for(int k = 0; k < NUMERO_DE_LINHAS; k++){
+                    if((j != k) && matrizPrincipal[j][k] == 1 && matrizPrincipal[i][k] != 1){
+                        count = 1;
+                    }
+                }
+            }
+        }
+    }
+
+    if(count == 0){
+        printf("Transitiva: V\n");
+        matrizTransitiva = 1;
+    } else {
+        printf("Transitiva: F\n");
+        matrizTransitiva = 0;
+        for(int i= 0; i < NUMERO_DE_LINHAS; i++){
+            for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
+                if((i != j) && matrizPrincipal[i][j] == 1){
+                    for(int k = 0; k < NUMERO_DE_LINHAS; k++){
+                        if((j != k) && matrizPrincipal[j][k] == 1 && matrizPrincipal[i][k] != 1){   
+                            printf("(%d, %d); ", vetorAux[i], vetorAux[k]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void verificaRelacaoEquivalencia(){
+    if(matrizReflexiva == 1 && matrizSimetrica == 1 && matrizTransitiva == 1){
+        printf("Relacao de equivalencia: V\n");
+    } else {
+        printf("Relacao de equivalencia: F\n");
+    }
+}
+
+void verificaRelacaoOrdemParcial(){
+     if(matrizReflexiva == 1 && matrizAntissimetrica == 1 && matrizTransitiva == 1){
+        printf("Relacao de ordem parcial: V\n");
+    } else {
+        printf("Relacao de ordem parcial: F\n");
+    }
+}
+
+void verificaFechoTransitivo(){
+
+}
 
 
 int main(){
-    arquivo_entrada = fopen("ex5.txt", "rt"); //Leitura do arquivo
+    arquivo_entrada = fopen("ex2.txt", "rt"); //Leitura do arquivo
     defineValoresAuxiliares();
 
     alocaMatrizPrincipal();
@@ -258,6 +329,14 @@ int main(){
     verificaReflexiva();
     verificarIrreflexiva();
 
-    verificaSimetrica();
+    verificaSimetrica(); //conserta print
     verificaAntiSimetrica();
+    verificaAssimetrica();
+
+    verificaTransitiva(); //conserta print
+
+    verificaRelacaoEquivalencia();
+    verificaRelacaoOrdemParcial();
+
+    verificaFechoTransitivo();
 }
