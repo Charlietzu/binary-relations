@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int tamanhoMatriz, *vetorAux, **matrizPrincipal, **matrizTransposta, NUMERO_DE_LINHAS, NUMERO_DE_COLUNAS;
+int tamanhoMatriz, *vetorAux, **matrizPrincipal, NUMERO_DE_LINHAS, NUMERO_DE_COLUNAS;
 FILE *arquivo_entrada;
 int valorAux, valorLinha, valorColuna;
 
@@ -25,13 +25,6 @@ void alocaMatrizPrincipal(){
         matrizPrincipal[i] = (int *) malloc (sizeof(int) * NUMERO_DE_COLUNAS);
     }
 }
-//Alocação da matriz transposta da mesma forma que a matriz principal, a usaremos para comparações
-void alocaMatrizTransposta(){
-    matrizTransposta = (int **) malloc (sizeof(int *) * NUMERO_DE_LINHAS);
-    for(int i = 0; i < NUMERO_DE_LINHAS; i++){
-        matrizTransposta[i] = (int *) malloc (sizeof(int) * NUMERO_DE_COLUNAS);
-    }
-}
 
 //Preencher matriz principal com base nos pares ordenados do arquivo de entrada
 void preencheMatrizPrincipal(){
@@ -53,15 +46,6 @@ void preencheMatrizPrincipal(){
     }
 }
 
-//Armazena cada linha da matriz principal na coluna da matriz transposta (propriedades de matrizes)
-void preencheMatrizTransposta(){
-    for(int i = 0; i < NUMERO_DE_LINHAS; i++){
-        for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
-            matrizTransposta[j][i] = matrizPrincipal[i][j];
-        }
-    }
-}
-
 //Imprimir matriz principal para teste
 void imprimeMatrizPrincipal(){
     for(int i = 0; i < NUMERO_DE_LINHAS; i++){
@@ -72,31 +56,11 @@ void imprimeMatrizPrincipal(){
     }
 }
 
-//Imprimir matriz transposta para teste
-void imprimeMatrizTransposta(){
-    for(int i = 0; i < NUMERO_DE_LINHAS; i++){
-        for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
-            printf("%d", matrizTransposta[i][j]);
-        }
-        printf("\n");
-    }
-}
-
-
 //Preenche matriz principal preenchendo com 0, para evitar erros
 void iniciaMatrizPrincipal(){
      for(int i = 0; i < NUMERO_DE_LINHAS; i++){
         for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
             matrizPrincipal[i][j] = 0;
-        }
-    }
-}
-
-//Preenche matriz transposta preenchendo com 0, para evitar erros
-void iniciaMatrizTransposta(){
-     for(int i = 0; i < NUMERO_DE_LINHAS; i++){
-        for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
-            matrizTransposta[i][j] = 0;
         }
     }
 }
@@ -191,7 +155,7 @@ void verificaSimetrica(){
            }
         }
     }
-    int ignora = 0;
+    int ignora = 1;
     if(count == 1){
         printf("Simetrica: V\n");
         matrizSimetrica = 1;
@@ -200,15 +164,10 @@ void verificaSimetrica(){
         matrizSimetrica = 0;
         for(int i = 0; i < NUMERO_DE_LINHAS; i++){
             for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
-                if(matrizPrincipal[i][j] != matrizPrincipal[j][i]){
-                    if(ignora == 0){
-                        ignora++;
-                    } else {
-                        printf("(%d, %d); ", vetorAux[i], vetorAux[j]);
-                        ignora++;
-                    }
+                if (matrizPrincipal[i][j] == 0 && matrizPrincipal[j][i] == 1) {
+                    printf("(%d,%d); ", vetorAux[i], vetorAux[j]);
                     break;
-                } 
+                }
             }
         }
         printf("\n");
@@ -280,11 +239,13 @@ void verificaTransitiva(){
                     for(int k = 0; k < NUMERO_DE_LINHAS; k++){
                         if((j != k) && matrizPrincipal[j][k] == 1 && matrizPrincipal[i][k] != 1){   
                             printf("(%d, %d); ", vetorAux[i], vetorAux[k]);
+                            matrizPrincipal[i][k] = 1;
                         }
                     }
                 }
             }
-        }
+        } 
+        printf("\n");
     }
 }
 
@@ -305,26 +266,26 @@ void verificaRelacaoOrdemParcial(){
 }
 
 void verificaFechoTransitivo(){
-
+    printf("Fecho transitivo da relacao: ");
+    for(int i = 0; i < NUMERO_DE_LINHAS; i++){
+        for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
+            if(matrizPrincipal[i][j] == 1){
+                printf("(%d, %d); ", vetorAux[i], vetorAux[j]);
+            }
+        }
+    }
 }
 
 
 int main(){
-    arquivo_entrada = fopen("ex2.txt", "rt"); //Leitura do arquivo
+    arquivo_entrada = fopen("ex3.txt", "rt"); //Leitura do arquivo
     defineValoresAuxiliares();
 
     alocaMatrizPrincipal();
-    alocaMatrizTransposta();
-
     iniciaMatrizPrincipal();
-    iniciaMatrizTransposta();
-
     preencheMatrizPrincipal();
-    preencheMatrizTransposta();
-
     imprimeMatrizPrincipal();
     printf("\n");
-    imprimeMatrizTransposta();
 
     verificaReflexiva();
     verificarIrreflexiva();
