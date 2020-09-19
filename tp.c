@@ -165,7 +165,7 @@ void verificaSimetrica(){
         for(int i = 0; i < NUMERO_DE_LINHAS; i++){
             for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
                 if (matrizPrincipal[i][j] == 0 && matrizPrincipal[j][i] == 1) {
-                    printf("(%d,%d); ", vetorAux[i], vetorAux[j]);
+                    printf("(%d, %d); ", vetorAux[i], vetorAux[j]);
                     break;
                 }
             }
@@ -278,23 +278,21 @@ void verificaFechoTransitivo(){
 
 
 int main(){
-    arquivo_entrada = fopen("ex3.txt", "rt"); //Leitura do arquivo
+    arquivo_entrada = fopen("ex9.txt", "rt"); //Leitura do arquivo
     defineValoresAuxiliares();
 
     alocaMatrizPrincipal();
     iniciaMatrizPrincipal();
     preencheMatrizPrincipal();
-    imprimeMatrizPrincipal();
-    printf("\n");
 
     verificaReflexiva();
     verificarIrreflexiva();
 
-    verificaSimetrica(); //conserta print
+    verificaSimetrica(); // TODO: consertar ordem de print
     verificaAntiSimetrica();
     verificaAssimetrica();
 
-    verificaTransitiva(); //conserta print
+    verificaTransitiva();
 
     verificaRelacaoEquivalencia();
     verificaRelacaoOrdemParcial();
