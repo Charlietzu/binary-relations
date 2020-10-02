@@ -7,18 +7,15 @@ int valorAux, valorLinha, valorColuna;
 
 int matrizReflexiva = 0, matrizSimetrica = 0, matrizTransitiva = 0, matrizAntissimetrica = 0, matrizIrreflexiva = 0;
 
-//Analisar os valores da primeira linha.
 void defineValoresAuxiliares(){
-    fscanf(arquivo_entrada, "%d", &tamanhoMatriz); //Recebe o primeiro valor da primeira linha
+    fscanf(arquivo_entrada, "%d", &tamanhoMatriz);
     NUMERO_DE_COLUNAS = NUMERO_DE_LINHAS = tamanhoMatriz;
-    vetorAux = malloc(tamanhoMatriz * sizeof(int)); //O vetor auxiliar contem os valores após o primeiro valor da primeira linha
-    //Preencher vetor auxiliar com os valores restantes da primeira linha
+    vetorAux = malloc(tamanhoMatriz * sizeof(int));
     for(int i = 0; i < tamanhoMatriz; i++){
         fscanf(arquivo_entrada, "%d", &vetorAux[i]);
     }
 }
 
-//Alocação da matriz principal dinamicamente com base nos valores da defineValoresAuxiliares()
 void alocaMatrizPrincipal(){
     matrizPrincipal = (int **) malloc (sizeof(int *) * NUMERO_DE_LINHAS);
     for(int i = 0; i < NUMERO_DE_LINHAS; i++){
@@ -26,14 +23,11 @@ void alocaMatrizPrincipal(){
     }
 }
 
-//Preencher matriz principal com base nos pares ordenados do arquivo de entrada
 void preencheMatrizPrincipal(){
     while(!feof(arquivo_entrada)){
-        //Ler o par ordenado de cada linha e armazenar
         fscanf(arquivo_entrada, "%d", &valorLinha);
         fscanf(arquivo_entrada, "%d", &valorColuna);
         int linhaAux, colunaAux;
-        //Percorre vetor auxiliar e compara a posição dos valores dos pares
         for(int i = 0; i < tamanhoMatriz; i++){
             if(valorLinha == vetorAux[i]){
                 linhaAux = i;
@@ -46,17 +40,6 @@ void preencheMatrizPrincipal(){
     }
 }
 
-//Imprimir matriz principal para teste
-void imprimeMatrizPrincipal(){
-    for(int i = 0; i < NUMERO_DE_LINHAS; i++){
-        for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
-            printf("%d", matrizPrincipal[i][j]);
-        }
-        printf("\n");
-    }
-}
-
-//Preenche matriz principal preenchendo com 0, para evitar erros
 void iniciaMatrizPrincipal(){
      for(int i = 0; i < NUMERO_DE_LINHAS; i++){
         for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
@@ -65,17 +48,8 @@ void iniciaMatrizPrincipal(){
     }
 }
 
-//Imprimir vetor auxiliar para teste
-void imprimeVetorAux(){
-    for(int i = 0; i < tamanhoMatriz; i++){
-        printf("%d", vetorAux[i]);
-    }
-}
-
-//Verifica se a matriz principal é reflexiva
 void verificaReflexiva(){
     int count = 0;
-    //Iteração pela diagonal da matriz
     for(int i = 0; i < NUMERO_DE_LINHAS; i++){
         for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
             if(i == j){
@@ -86,14 +60,14 @@ void verificaReflexiva(){
           
         }
     }
-    //Para ser reflexiva, o contador ter sido somado em todas as posições da diagonal (que é o mesmo número de linhas ou colunas)
+    
     if(count == NUMERO_DE_LINHAS){
         printf("1. Reflexiva: V\n");
         matrizReflexiva = 1;
     } else {
         printf("1. Reflexiva: F\n");
         matrizReflexiva = 0;
-        //Caso não seja reflexiva, irei printar os pares que fazem com que essa condição não seja aceita.
+        
         for(int i = 0; i < NUMERO_DE_LINHAS; i++){
             for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
                 if(i == j){
@@ -107,10 +81,8 @@ void verificaReflexiva(){
     }
 }
 
-//Verifica se a matriz principal é irreflexiva
 void verificarIrreflexiva(){
     int count = 0;
-    //Iteração pela diagonal da matriz
     for(int i = 0; i < NUMERO_DE_LINHAS; i++){
         for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
             if(i == j){
@@ -122,12 +94,12 @@ void verificarIrreflexiva(){
         }
     }
 
-    //Para ser irreflexiva, o contador NÃO pode ter sido somado em todas as posições da diagonal (que é o mesmo número de linhas ou colunas)
+    
     if(count == NUMERO_DE_LINHAS){
         printf("2. Irreflexiva: V\n");
         matrizIrreflexiva = 1;
     } else {
-        //Caso não seja irreflexiva, irei printar os pares que fazem com que essa condição não seja aceita.
+        
         printf("2. Irreflexiva: F\n");
         matrizIrreflexiva = 0;
         for(int i = 0; i < NUMERO_DE_LINHAS; i++){
@@ -143,10 +115,8 @@ void verificarIrreflexiva(){
     }
 }
 
-//Verifica se a matriz principal é simetrica
 void verificaSimetrica(){
     int count = 1;
-    //Comparar se a matriz principal é igual a matriz transposta (propriedades de matrizes)
     for(int i = 0; i < NUMERO_DE_LINHAS; i++){
         for(int j = 0; j < NUMERO_DE_COLUNAS; j++){
            if(matrizPrincipal[i][j] != matrizPrincipal[j][i]){
@@ -277,7 +247,7 @@ void verificaFechoTransitivo(){
 }
 
 int main(){
-    arquivo_entrada = fopen("ex1.txt", "rt"); //Leitura do arquivo
+    arquivo_entrada = fopen("ex9.txt", "rt"); //Leitura do arquivo, troque o primeiro parmêtro pelo nome do arquivo desejado.
     defineValoresAuxiliares();
 
     alocaMatrizPrincipal();
